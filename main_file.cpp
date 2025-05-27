@@ -18,12 +18,12 @@
 #include <vector>
 
 float speed = 0;
-
-Models::ObjModel jablko("C:/Users/Julia/Desktop/g3d_st_04_win/g3d_st_04_win/x64/Debug/jablko2.obj");
-Models::ObjModel trawa("C:/Users/Julia/Desktop/g3d_st_04_win/g3d_st_04_win/x64/Debug/trawa.obj");
-Models::ObjModel drzewo("C:/Users/Julia/Desktop/g3d_st_04_win/g3d_st_04_win/x64/Debug/drzewo.obj");
-Models::ObjModel drzewo2("C:/Users/Julia/Desktop/g3d_st_04_win/g3d_st_04_win/x64/Debug/drzewo.obj");
-Models::ObjModel ptaszor("C:/Users/Julia/Desktop/g3d_st_04_win/g3d_st_04_win/x64/Debug/ptaszor.obj");
+//zmienic te sciezki
+Models::ObjModel jablko("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/jablko2.obj");
+Models::ObjModel trawa("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/trawa.obj");
+Models::ObjModel drzewo("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/drzewo.obj");
+Models::ObjModel drzewo2("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/drzewo.obj");
+Models::ObjModel ptaszor("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/ptaszor.obj");
 //Models::Torus torus;
 
 
