@@ -18,13 +18,14 @@
 #include <vector>
 
 float speed = 0;
-//zmienic te sciezki
+//zmienic te sciezki zeby nie bylo takiego odniesienia
 Models::ObjModel jablko("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/jablko2.obj");
 Models::ObjModel trawa("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/trawa.obj");
 Models::ObjModel drzewo("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/drzewo.obj");
 Models::ObjModel drzewo2("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/drzewo.obj");
 Models::ObjModel ptaszor("C:/Users/Julia/source/repos/g3d_st_04_win/g3d_st_04_win/x64/Debug/ptaszor.obj");
-//Models::Torus torus;
+GLuint tex0;
+ShaderProgram* sp;
 
 
 void error_callback(int error, const char* description) {
@@ -45,15 +46,43 @@ void key_callback(GLFWwindow* window, int key,
 
 }
 
+GLuint readTexture(const char* filename) {
+	GLuint tex;
+	glActiveTexture(GL_TEXTURE0);
+
+	//Wczytanie do pamięci komputera
+	std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
+	unsigned width, height;   //Zmienne do których wczytamy wymiary obrazka
+	//Wczytaj obrazek
+	unsigned error = lodepng::decode(image, width, height, filename);
+
+	//Import do pamięci karty graficznej
+	glGenTextures(1, &tex); //Zainicjuj jeden uchwyt
+	glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
+	//Wczytaj obrazek do pamięci KG skojarzonej z uchwytem
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	return tex;
+}
+
 void initOpenGLProgram(GLFWwindow* window) {
     initShaders();	
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glfwSetKeyCallback(window, key_callback);
+
+	sp = new ShaderProgram("v_simplest.glsl", NULL, "f_simplest.glsl");
+	tex0 = readTexture("metal.png");
 }
 
 void freeOpenGLProgram(GLFWwindow* window) {
     freeShaders();
+	delete sp;
+	glDeleteTextures(1, &tex0);
 }
 
 void drawScene(GLFWwindow* window, float angle) {
@@ -66,9 +95,9 @@ void drawScene(GLFWwindow* window, float angle) {
 		glm::vec3(0.0f, 0.0f, 0.0f),    
 		glm::vec3(0.0f, 1.0f, 0.0f)     
 	);
-    spLambert->use();
-    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
+    sp->use();
+    glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 
     glBindVertexArray(0);
 
@@ -77,8 +106,8 @@ void drawScene(GLFWwindow* window, float angle) {
 	groundM = glm::scale(groundM, glm::vec3(10.0f, 0.5f, 10.0f));
 	groundM = glm::rotate(groundM, glm::radians(-90.0f), glm::vec3(1, 0, 0));
 
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(groundM));
-	glUniform4f(spLambert->u("color"), 0.1f, 0.8f, 0.1f, 1.0f); 
+	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(groundM));
+	glUniform4f(sp->u("color"), 0.1f, 0.8f, 0.1f, 1.0f); 
 
 	trawa.drawSolid(true);
 
@@ -87,8 +116,11 @@ void drawScene(GLFWwindow* window, float angle) {
     appleM = glm::rotate(appleM, angle, glm::vec3(0, 1, 0));
     appleM = glm::scale(appleM, glm::vec3(0.5f, 0.5f, 0.5f));
 
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(appleM));
-    glUniform4f(spLambert->u("color"), 0.8f, 0.1f, 0.1f, 1.0f);  
+    glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(appleM));
+    glUniform4f(sp->u("color"), 0.8f, 0.1f, 0.1f, 1.0f); 
+	glUniform1i(sp->u("textureMap0"), 0);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, tex0);
     jablko.drawSolid(true);
 
 
