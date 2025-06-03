@@ -89,72 +89,89 @@ void drawScene(GLFWwindow* window, float angle) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 0.1f, 50.0f);
+    glm::mat4 V = glm::lookAt(
+        glm::vec3(0.0f, 5.0f, -10.0f),
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    );
 
-	glm::mat4 V = glm::lookAt(
-		glm::vec3(0.0f, 5.0f, -10.0f),  
-		glm::vec3(0.0f, 0.0f, 0.0f),    
-		glm::vec3(0.0f, 1.0f, 0.0f)     
-	);
-    sp->use();
+    // ====== TRAWA (bez tekstury) ======
+    spLambert->use();
+    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
+
+    glm::mat4 groundM = glm::mat4(1.0f);
+    groundM = glm::translate(groundM, glm::vec3(0.0f, -5.5f, 0.0f));
+    groundM = glm::scale(groundM, glm::vec3(10.0f, 0.5f, 10.0f));
+    groundM = glm::rotate(groundM, glm::radians(-90.0f), glm::vec3(1, 0, 0));
+
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(groundM));
+    glUniform4f(spLambert->u("color"), 0.1f, 0.8f, 0.1f, 1.0f);
+    trawa.drawSolid(true);
+
+    // ====== JABŁKO (z teksturą) ======
+    sp->use(); // Używamy shadera z obsługą tekstur
     glUniformMatrix4fv(sp->u("P"), 1, false, glm::value_ptr(P));
     glUniformMatrix4fv(sp->u("V"), 1, false, glm::value_ptr(V));
 
-    glBindVertexArray(0);
-
-	glm::mat4 groundM = glm::mat4(1.0f);
-	groundM = glm::translate(groundM, glm::vec3(0.0f, -5.5f, 0.0f));
-	groundM = glm::scale(groundM, glm::vec3(10.0f, 0.5f, 10.0f));
-	groundM = glm::rotate(groundM, glm::radians(-90.0f), glm::vec3(1, 0, 0));
-
-	glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(groundM));
-	glUniform4f(sp->u("color"), 0.1f, 0.8f, 0.1f, 1.0f); 
-
-	trawa.drawSolid(true);
-
     glm::mat4 appleM = glm::mat4(1.0f);
-    appleM = glm::translate(appleM, glm::vec3(0.0f, 0.5f, 0.0f));
+    appleM = glm::translate(appleM, glm::vec3(0.0f, -2.0f, 0.0f));
     appleM = glm::rotate(appleM, angle, glm::vec3(0, 1, 0));
     appleM = glm::scale(appleM, glm::vec3(0.5f, 0.5f, 0.5f));
 
     glUniformMatrix4fv(sp->u("M"), 1, false, glm::value_ptr(appleM));
-    glUniform4f(sp->u("color"), 0.8f, 0.1f, 0.1f, 1.0f); 
-	glUniform1i(sp->u("textureMap0"), 0);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tex0);
+    glUniform4f(sp->u("color"), 1.0f, 1.0f, 1.0f, 1.0f); // Biały kolor, żeby tekstura była widoczna
+
+    // Ustaw obie tekstury (shader ich wymaga)
+    glUniform1i(sp->u("textureMap0"), 0);
+    glUniform1i(sp->u("textureMap1"), 0); // Używamy tej samej tekstury dla obu samplerów
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex0);
+
     jablko.drawSolid(true);
 
+    // ====== DRZEWA I PTAK (bez tekstury) ======
+    spLambert->use(); // Przełącz z powrotem na shader bez tekstur
+    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
 
-	glm::mat4 treeM = glm::mat4(1.0f);
-	treeM = glm::translate(treeM, glm::vec3(2.0f, -2.0f, -0.8f));
-	treeM = glm::rotate(treeM, angle, glm::vec3(0, 1, 0));
-	treeM = glm::scale(treeM, glm::vec3(0.5f, 0.5f, 0.5f));
+    // Wyłącz teksturę (opcjonalne, ale bezpieczne)
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(treeM));
-	glUniform4f(spLambert->u("color"), 0.0f, 0.3f, 0.0f, 1.0f);
-	drzewo.drawSolid(true);
+    // Drzewo 1
+    glm::mat4 treeM = glm::mat4(1.0f);
+    treeM = glm::translate(treeM, glm::vec3(2.0f, -2.0f, -0.8f));
+    treeM = glm::rotate(treeM, angle, glm::vec3(0, 1, 0));
+    treeM = glm::scale(treeM, glm::vec3(0.5f, 0.5f, 0.5f));
 
-	glm::mat4 tree2M = glm::mat4(1.0f);
-	tree2M = glm::translate(tree2M, glm::vec3(-2.0f, -4.0f, -0.8f));
-	tree2M = glm::rotate(tree2M, angle, glm::vec3(0, 1, 0));
-	tree2M = glm::scale(tree2M, glm::vec3(0.5f, 0.5f, 0.5f));
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(treeM));
+    glUniform4f(spLambert->u("color"), 0.0f, 0.3f, 0.0f, 1.0f);
+    drzewo.drawSolid(true);
 
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(tree2M));
-	glUniform4f(spLambert->u("color"), 0.0f, 0.3f, 0.0f, 1.0f);
-	drzewo2.drawSolid(true);
+    // Drzewo 2
+    glm::mat4 tree2M = glm::mat4(1.0f);
+    tree2M = glm::translate(tree2M, glm::vec3(-2.0f, -4.0f, -0.8f));
+    tree2M = glm::rotate(tree2M, angle, glm::vec3(0, 1, 0));
+    tree2M = glm::scale(tree2M, glm::vec3(0.5f, 0.5f, 0.5f));
 
-	glm::mat4 ptakM = glm::mat4(1.0f);
-	ptakM = glm::translate(ptakM, glm::vec3(-5.0f, -4.0f, -0.8f));
-	ptakM = glm::rotate(ptakM, angle, glm::vec3(0, 1, 0));
-	ptakM = glm::scale(ptakM, glm::vec3(0.5f, 0.5f, 0.5f));
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(tree2M));
+    glUniform4f(spLambert->u("color"), 0.0f, 0.3f, 0.0f, 1.0f);
+    drzewo2.drawSolid(true);
 
-	glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(ptakM));
-	glUniform4f(spLambert->u("color"), 0.0f, 0.0f, 0.5f, 1.0f);
-	ptaszor.drawSolid(true);
+    // Ptak
+    glm::mat4 ptakM = glm::mat4(1.0f);
+    ptakM = glm::translate(ptakM, glm::vec3(-5.0f, -4.0f, -0.8f));
+    ptakM = glm::rotate(ptakM, angle, glm::vec3(0, 1, 0));
+    ptakM = glm::scale(ptakM, glm::vec3(0.5f, 0.5f, 0.5f));
 
-
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(ptakM));
+    glUniform4f(spLambert->u("color"), 0.0f, 0.0f, 0.5f, 1.0f);
+    ptaszor.drawSolid(true);
 
     glfwSwapBuffers(window);
 }
+
 
 
 
