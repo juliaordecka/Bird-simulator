@@ -25,5 +25,6 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "teapot.h"
 #include "torus.h"
 #include <modelproba.h>
+#include <skybox.h>
 
 #endif

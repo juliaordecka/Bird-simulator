@@ -27,6 +27,7 @@
     <ClInclude Include="modelproba.h" />
     <ClInclude Include="myCube.h" />
     <ClInclude Include="shaderprogram.h" />
+    <ClInclude Include="skybox.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="teapot.h" />
     <ClInclude Include="torus.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="modelproba.cpp" />
     <ClCompile Include="shaderprogram.cpp" />
+    <ClCompile Include="skybox.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="teapot.cpp" />
     <ClCompile Include="torus.cpp" />
@@ -48,12 +50,14 @@
     <None Include="f_lambert.glsl" />
     <None Include="f_lamberttextured.glsl" />
     <None Include="f_simplest.glsl" />
+    <None Include="f_skybox.glsl" />
     <None Include="f_textured.glsl" />
     <None Include="v_constant.glsl" />
     <None Include="v_colored.glsl" />
     <None Include="v_lambert.glsl" />
     <None Include="v_lamberttextured.glsl" />
     <None Include="v_simplest.glsl" />
+    <None Include="v_skybox.glsl" />
     <None Include="v_textured.glsl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

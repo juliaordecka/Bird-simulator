@@ -48,6 +48,9 @@
     <ClInclude Include="modelproba.h">
       <Filter>Pliki naglówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>Pliki naglówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cube.cpp">
@@ -75,6 +78,9 @@
       <Filter>Pliki zródlowe</Filter>
     </ClCompile>
     <ClCompile Include="modelproba.cpp">
+      <Filter>Pliki zródlowe</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox.cpp">
       <Filter>Pliki zródlowe</Filter>
     </ClCompile>
   </ItemGroup>
@@ -115,5 +121,9 @@
     <None Include="v_simplest.glsl">
       <Filter>Pliki zasobów</Filter>
     </None>
+    <None Include="v_skybox.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
+    <None Include="f_skybox.glsl" />
   </ItemGroup>
 </Project>

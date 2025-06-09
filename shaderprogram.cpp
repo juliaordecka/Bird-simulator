@@ -1,31 +1,11 @@
-﻿/*
-Niniejszy program jest wolnym oprogramowaniem; możesz go
-rozprowadzać dalej i / lub modyfikować na warunkach Powszechnej
-Licencji Publicznej GNU, wydanej przez Fundację Wolnego
-Oprogramowania - według wersji 2 tej Licencji lub(według twojego
-wyboru) którejś z późniejszych wersji.
-
-Niniejszy program rozpowszechniany jest z nadzieją, iż będzie on
-użyteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyślnej
-gwarancji PRZYDATNOŚCI HANDLOWEJ albo PRZYDATNOŚCI DO OKREŚLONYCH
-ZASTOSOWAŃ.W celu uzyskania bliższych informacji sięgnij do
-Powszechnej Licencji Publicznej GNU.
-
-Z pewnością wraz z niniejszym programem otrzymałeś też egzemplarz
-Powszechnej Licencji Publicznej GNU(GNU General Public License);
-jeśli nie - napisz do Free Software Foundation, Inc., 59 Temple
-Place, Fifth Floor, Boston, MA  02110 - 1301  USA
-*/
-
-#include "shaderprogram.h"
-
+﻿#include "shaderprogram.h"
 
 ShaderProgram *spLambert;
 ShaderProgram *spConstant;
 ShaderProgram* spColored;
 ShaderProgram* spTextured;
 ShaderProgram* spLambertTextured;
-
+ShaderProgram* spSkybox;
 
 void initShaders() {
 	spLambert = new ShaderProgram("v_lambert.glsl", NULL, "f_lambert.glsl");
@@ -33,6 +13,7 @@ void initShaders() {
 	spTextured = new ShaderProgram("v_textured.glsl", NULL, "f_textured.glsl");
 	spColored = new ShaderProgram("v_colored.glsl", NULL, "f_colored.glsl");
 	spLambertTextured = new ShaderProgram("v_lamberttextured.glsl", NULL, "f_lamberttextured.glsl");
+	spSkybox = new ShaderProgram("v_skybox.glsl", NULL, "f_skybox.glsl");
 }
 
 void freeShaders() {
@@ -41,6 +22,7 @@ void freeShaders() {
 	delete spTextured;
 	delete spColored;
 	delete spLambertTextured;
+	delete spSkybox;
 }
 
 //Procedura wczytuje plik do tablicy znaków.
