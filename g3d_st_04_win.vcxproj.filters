@@ -125,5 +125,11 @@
       <Filter>Pliki zasobów</Filter>
     </None>
     <None Include="f_skybox.glsl" />
+    <None Include="f_grass.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
+    <None Include="v_grass.glsl">
+      <Filter>Pliki zasobów</Filter>
+    </None>
   </ItemGroup>
 </Project>
